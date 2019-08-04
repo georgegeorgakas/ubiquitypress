@@ -41,6 +41,20 @@ class ExpressionController extends Controller
         return response()->json($expression, 201);
     }
 
+    public function expressionUpdate(Request $request, $id) {
+        $xmlResponse = $request->xml();
+        if (!isset($xmlResponse["expression"])) {
+            return response()->json(["message" => "Invalid Parameters on XML"], 400);
+        }
+        $expression = $xmlResponse["expression"];
+
+        $data = $this->getResult($expression);
+        $updateModel = ExpressionModel::find($id);
+        $updateModel->update($data);
+
+        return response()->json(null, 201);
+    }
+
     public function expressionDelete($id) {
         $isDeleted =  ExpressionModel::destroy($id);
         if($isDeleted) {
